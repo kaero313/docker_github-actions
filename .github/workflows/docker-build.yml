@@ -27,11 +27,10 @@ jobs:
       # 3단계: Docker 이미지 빌드
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-app:latest ./app
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.sha }} ./app
-      
+          docker build -t nayatrei3/nayatrei-app:latest ./app
+          docker build -t nayatrei3/nayatrei-app:${{ github.sha }} ./app      
       # 4단계: Docker Hub에 Push
       - name: Push to Docker Hub
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.sha }}
+          docker push nayatrei3/nayatrei-app:latest
+          docker push nayatrei3/nayatrei-app:${{ github.sha }}          
