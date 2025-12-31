@@ -41,17 +41,17 @@ jobs:
           pip install -r requirements.txt
       
       # 테스트 실행 (새로 추가!) ⭐
-      - name: Run tests
+      - name: Run test
         run: |
           cd app
-          pytest tests/ -v --tb=short
+          pytest test/ -v --tb=short
       
       # 테스트 결과 요약 (새로 추가!) ⭐
       - name: Test summary
         if: always()
         run: |
           if [ $? -eq 0 ]; then
-            echo "✅ All tests passed!"
+            echo "✅ All test passed!"
           else
             echo "❌ Tests failed!"
             exit 1
