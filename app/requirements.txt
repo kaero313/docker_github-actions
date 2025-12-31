@@ -1,2 +1,3 @@
 Flask==3.0.0 # 웹 프레임워크
 psycopg2-binary==2.9.9 # PostgreSQL DB 연결 드라이버
+pytest==7.4.3
