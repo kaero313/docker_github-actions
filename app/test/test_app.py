@@ -34,3 +34,7 @@ def test_response_format(client):
     """응답 형식 검증"""
     response = client.get('/')
     assert response.content_type == 'application/json'
+
+def test_should_fail():
+    """일부러 실패하는 테스트"""
+    assert 1 == 2  # 무조건 실패!

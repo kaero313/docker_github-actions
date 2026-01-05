@@ -57,7 +57,3 @@ def get_users():
 if __name__ == '__main__':
     # 모든 인터페이스에서 접근 가능하도록 설정
     app.run(host='0.0.0.0', port=5000)
-
-def test_should_fail():
-    """일부러 실패하는 테스트"""
-    assert 1 == 2  # 무조건 실패!
