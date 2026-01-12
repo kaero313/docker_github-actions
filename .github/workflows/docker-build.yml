@@ -156,3 +156,53 @@ jobs:
 # 2. v2.1 tag push → test 실행 → (성공) build 실행 (새로 추가!) ⭐
 # 3. 테스트 실패 시 → build 실행 안 됨! (새로 추가!) ⭐
 # ============================================
+
+# ============================================
+  # Job 3: 서버 자동 배포 (새로 추가!) ⭐
+  # ============================================
+  deploy:
+    needs: build  # build 성공 후 실행
+    runs-on: ubuntu-latest
+    
+    steps:
+      # ----------------------------------------
+      # Step 1: 서버에 SSH 접속 및 배포
+      # ----------------------------------------
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            echo "🚀 Starting deployment..."
+            
+            # 배포 디렉토리로 이동
+            cd ~/app
+            
+            # 최신 이미지 받기
+            echo "📥 Pulling latest image..."
+            docker pull nayatrei3/nayatrei-app:latest
+            
+            # 기존 컨테이너 중지 및 제거
+            echo "🛑 Stopping containers..."
+            docker-compose down
+            
+            # 새 이미지로 시작
+            echo "✅ Starting new containers..."
+            docker-compose up -d
+            
+            # 상태 확인
+            echo "🔍 Checking status..."
+            docker-compose ps
+            
+            echo "🎉 Deployment completed!"
+      
+      # ----------------------------------------
+      # Step 2: 배포 결과 출력
+      # ----------------------------------------
+      - name: Deployment summary
+        run: |
+          echo "✅ Deployed to: ${{ secrets.SERVER_HOST }}"
+          echo "✅ User: ${{ secrets.SERVER_USER }}"
+          echo "✅ Image: nayatrei3/nayatrei-app:latest"
