@@ -161,35 +161,38 @@ jobs:
   # Job 3: 서버 자동 배포 (새로 추가!) ⭐
   # ============================================
   deploy:
-  needs: build
-  runs-on: self-hosted  # ← ubuntu-latest에서 변경!
+    needs: build
+    runs-on: self-hosted  # ← ubuntu-latest에서 변경!
   
-  steps:
+    steps:
     # ----------------------------------------
     # Self-hosted에서는 SSH 불필요!
     # 같은 서버에서 직접 실행
     # ----------------------------------------
-    - name: Deploy to server
-      run: |
-        echo "🚀 Starting deployment..."
-        
-        cd ~/app
-        
-        echo "📥 Pulling latest image..."
-        docker pull nayatrei3/nayatrei-app:latest
-        
-        echo "🛑 Stopping containers..."
-        docker-compose down
-        
-        echo "✅ Starting new containers..."
-        docker-compose up -d
-        
-        echo "🔍 Checking status..."
-        docker-compose ps
-        
-        echo "🎉 Deployment completed!"
-    
-    - name: Deployment summary
-      run: |
-        echo "✅ Deployed on self-hosted runner"
-        echo "✅ Image: nayatrei3/nayatrei-app:latest"
+      - name: Deploy to server
+        run: |
+          echo "🚀 Starting deployment..."
+          cd ~/app
+
+          # 1. 충돌 가능성이 있는 모든 컨테이너 강제 삭제 (|| true로 없어도 통과)
+          echo "🧹 Removing conflicting containers..."
+          docker rm -f myapp_backend myapp_postgres || true
+
+          # 2. 기존 컴포즈 환경 정리
+          echo "🛑 Stopping compose environment..."
+          docker compose down --remove-orphans
+
+          # 3. 최신 이미지로 시작 (pull과 up을 동시에)
+          echo "✅ Starting new containers..."
+          docker compose up -d --pull always
+
+          # 4. 찌꺼기 이미지 청소 (서버 용량 관리)
+          echo "♻️ Cleaning up unused images..."
+          docker image prune -f
+
+          echo "🎉 Deployment completed!"         
+
+      - name: Deployment summary
+        run: |
+          echo "✅ Deployed on self-hosted runner"
+          echo "✅ Image: nayatrei3/nayatrei-app:latest"
