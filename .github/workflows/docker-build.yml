@@ -160,8 +160,9 @@ jobs:
 # ============================================
   # Job 3: 서버 자동 배포 (새로 추가!) ⭐
   # ============================================
-  deploy:
-    needs: build  # build 성공 후 실행
+
+deploy:
+  needs: build
   runs-on: self-hosted  # ← ubuntu-latest에서 변경!
   
   steps:
