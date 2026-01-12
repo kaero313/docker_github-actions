@@ -21,8 +21,7 @@ jobs:
   # ============================================
   test:
     # Ubuntu 최신 버전 가상 머신에서 실행
-    #runs-on: ubuntu-latest
-    runs-on: self-hosted  # ubuntu-latest 대신!
+    runs-on: ubuntu-latest
 
     steps:
       # 코드 가져오기
