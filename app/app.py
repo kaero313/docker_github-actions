@@ -25,6 +25,7 @@ def get_db_connection():
 def home():
     """메인 페이지"""
     return jsonify({
+        'auto_build': 'true',
         'message': 'Hello Docker Compose! I am nayatrei.',
         'status': 'running',
         'user': 'nayatrei'
